@@ -140,8 +140,128 @@ FROM EMPLOYEE;
 ### DATE_FORMAT()
 >날짜 포맷을 변경
 - SELECT  HIRE_DATE, 
-    <br>	DATE_FORMAT(HIRE_DATE,'%Y%m%d%H%i%s'),
-    <br>	DATE_FORMAT(HIRE_DATE, '%Y/%m/%d %H:%i:%s'),
-    <br>	DATE_FORMAT(HIRE_DATE, '%y/%m/%d %H:%i:%s'),
-    <br>	DATE_FORMAT(NOW() , '%Y/%m/%d %H:%i:%s')  
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;DATE_FORMAT(HIRE_DATE,'%Y%m%d%H%i%s'),
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;DATE_FORMAT(HIRE_DATE, '%Y/%m/%d %H:%i:%s'),
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;DATE_FORMAT(HIRE_DATE, '%y/%m/%d %H:%i:%s'),
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;DATE_FORMAT(NOW() , '%Y/%m/%d %H:%i:%s')  
 FROM EMPLOYEE;
+
+### IF(조건, 값, 값)
+> 현재 근무하는 직원들의 성별을 남, 여 구분짓기
+- SELECT EMP_NAME, EMP_NO,<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;IF(SUBSTR(EMP_NO,8,1) = 2, '여', '남') 성별  
+FROM EMPLOYEE;
+
+## CASE 문
+> 자바의 IF, SWITCH 처럼 사용 가능
+
+- CASE
+- WHEN 조건식1 THEN 결과1
+- WHEN 조건식2 THEN 결과2
+- ELSE 결과3
+- END
+
+## 숫자 데이터 함수 
+### ABS() : 절대값 표현
+- SELECT ABS(10), ABS(-10);  
+
+### MOD() : 주어진 컬럼이나 값을 나눈 나머지를 반환, 정수로 표현
+- SELECT MOD(10,3);
+
+### ROUND() : 지정한 자리수 부터 반올림
+- SELECT ROUND(123.456, 0),		--> 0을 넣으면 소수점 첫째자리에서 반올림한다  
+	   ROUND(123.456, 1),		--> 1을 넣으면 소수점 둘째자리에서 반올림한다  
+	   ROUND(123.456, 2),  
+	   ROUND(123.456, -2);		--> -2 넣으면 둘째자리(10의 자리)에서 반올림한다.   
+	  
+### CEIL() : 소수점 첫째자리에서 올림  
+### FLOOR() : 소수점 이하 자리 모두 버림  
+- SELECT CEIL(123.456), FLOOR(123.456);
+
+### TRUNCATE() : 지정한 위치까지 숫자를 버리는 함수
+-SELECT TRUNCATE(123.456, 0),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRUNCATE(123.456, 1),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRUNCATE(123.456, 2),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRUNCATE(123.456, -2);  
+	  
+### CEILING() : 소수점 반올림(이라고는 하는데 올림같다)
+- SELECT CEILING(4.1222);
+
+### DATE_ADD()
+### DATE_SUB()
+- SELECT EMP_NAME, HIRE_DATE,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATE_ADD(HIRE_DATE, INTERVAL 1 MONTH), 	--> HIRE_DATE + 1달  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATE_SUB(HIRE_DATE, INTERVAL 1 YEAR)		--> HIRE_DATE - 1년  
+FROM EMPLOYEE;	
+
+### DAYOFWEEK(날짜) : 해당 날짜의 요일을 리턴
+> 1: 일요일 ~ 7: 토요일
+- SELECT DAYOFWEEK(NOW()); 
+
+- SELECT EMP_NAME,  
+&nbsp;&nbsp;&nbsp;CASE  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN DAYOFWEEK(HIRE_DATE) = 1 THEN '일요일'  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN DAYOFWEEK(HIRE_DATE) = 2 THEN '월요일'  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN DAYOFWEEK(HIRE_DATE) = 3 THEN '화요일'  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN DAYOFWEEK(HIRE_DATE) = 4 THEN '수요일'  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN DAYOFWEEK(HIRE_DATE) = 5 THEN '목요일'  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN DAYOFWEEK(HIRE_DATE) = 6 THEN '금요일'  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHEN DAYOFWEEK(HIRE_DATE) = 7 THEN '토요일'  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END AS '요일'  
+FROM EMPLOYEE;  
+	   
+- LAST_DAY(날짜) : 주어진 날짜의 마지막 일자를 조회  
+SELECT LAST_DAY(NOW());
+
+### ORDER BY 
+> SELECT 통해 조회한 결과들을 특정 기준에 맞춰 정렬  
+- SELECT EMP_ID, EMP_NAME 이름, SALARY, DEPT_CODE  
+FROM EMPLOYEE  
+- ORDER BY EMP_ID;		--> 정렬의 기본값 ASC(오름차순)  
+- ORDER BY EMP_NAME ASC;  
+- ORDER BY DEPT_CODE DESC, EMP_ID;	--> 일단 DEPT_CODE로 내림차순하고 그 안에서 EMP_ID 오름차순으로 정렬  
+- ORDER BY 이름 DESC;  
+- ORDER BY 3 DESC;	--> 컬럼의 넘버로 정렬 여기서는 SALARY를 가리키고 있다 
+
+### GROUP BY
+- 특정 컬럼이나 계산식을 하나의 그룹으로 묶어  
+- 한 테이블 내에서 소그룹 별로 조회하고자 할때 선언
+- 부서별 평균  
+- SELECT DEPT_CODE, FLOOR(AVG(SALARY))		--> FLOOR 소수점 버려버린다  
+FROM EMPLOYEE  
+GROUP BY DEPT_CODE ;  
+
+## HAVING 구문
+>GROUP BY 한 각 소그룹에 대한 조건을 설정 하고자 할 때
+그룹 함수와 함께 사용하는 조건 구문
+
+## SET OPERATION 
+- 합집합 (SELECT한 결과를 합친다 생각)
+- UNION 
+> 두 개 이상의 SELECT 한 결과(RESULT SET)를 합치는 명령어  
+  중복이 있을 경우 중복되는 결과는 1번만 보여준다.
+- UNION ALL 
+> 두 개 이상의 SELECT 한 결과(RESULT SET)를 합치는 명령어  
+중복이 있을 경우 중복이 되는 내용 그대로 조회.
+- SELECT 두 개 컬럼을 잘 맞춰줘야 한다.
+
+# JOIN --> 매우 매우 중요한 친구
+> 두 개 이상의 테이블을 하나로 합쳐 사용하는 명령 구문  
+ EX) DEPT_CODE 의 D5만 봤을 때 어느 부서인지 정확히 알 수 가 없는데 JOIN을 통해  
+ D5가 무슨 부서인지 같이 합쳐서 가져오면 어느 부서인지 알 수 있다. 
+
+## INNER JOIN
+- 표준 SQL 방식  
+SELECT DEPT_CODE, DEPT_TITLE  
+FROM EMPLOYEE  
+JOIN DEPARTMENT ON(DEPT_CODE = DEPT_ID)  
+ORDER BY 1;  
+
+- MYSQL 방식		  
+SELECT DEPT_CODE, DEPT_TITLE  
+FROM EMPLOYEE, DEPARTMENT  
+WHERE DEPT_CODE = DEPT_ID;		--> JOIN을 적지않고 FROM부분에 다 적어주고 조건을 걸어서 실행  
+
+- SELECT DEPT_CODE, DEPT_TITLE  
+FROM EMPLOYEE e , DEPARTMENT d   
+WHERE e.DEPT_CODE = d.DEPT_ID;		--> EMPLOYEE를 다 안적어주고 EMPLOYEE의 별명인 e를 적어서도 사용가능  
