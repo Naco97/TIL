@@ -134,5 +134,14 @@ FROM EMPLOYEE;
 
 ### EXTRACT : (YEAR | MONTH | DAY FROM 날짜데이터) : 지정한 날로부터 날짜 값을 추출
 - SELECT HIRE_DATE, EXTRACT(YEAR FROM HIRE_DATE),
-	   EXTRACT(MONTH FROM HIRE_DATE)  
+	   <br>EXTRACT(MONTH FROM HIRE_DATE)  
+FROM EMPLOYEE;
+
+### DATE_FORMAT()
+>날짜 포맷을 변경
+- SELECT  HIRE_DATE, 
+    <br>	DATE_FORMAT(HIRE_DATE,'%Y%m%d%H%i%s'),
+    <br>	DATE_FORMAT(HIRE_DATE, '%Y/%m/%d %H:%i:%s'),
+    <br>	DATE_FORMAT(HIRE_DATE, '%y/%m/%d %H:%i:%s'),
+    <br>	DATE_FORMAT(NOW() , '%Y/%m/%d %H:%i:%s')  
 FROM EMPLOYEE;
