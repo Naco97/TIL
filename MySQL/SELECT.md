@@ -53,5 +53,49 @@ WHERE SALARY BETWEEN 3500000 AND 5500000;
 
 ## LIKE
 - 해당하는 숫자나 문자가 포함된 정보를 조회할 때 사용하는 연산자
-- '_' : _는 임의의 문자 하나
-- '%' : 몇자리 문자든 관계없이
+- '_'&nbsp;&nbsp;  :&nbsp; _는 임의의 문자 하나
+- '%' : 몇자리 문자든 관계없이 
+
+#### ESCAPE 문자 선언.    뒤에는 특수문자가 아닌 일반문자로 선언하여 사용.
+
+### IN 연산자
+> IN (값1, 값2, 값3, ...)
+- SELECT * FROM EMPLOYEE WHERE JOB_CODE IN ('J1', 'J4');  <br/> -- J1 또는 J4 인 사람들 조회
+- SELECT * FROM EMPLOYEE WHERE JOB_CODE NOT IN ('J1', 'J4');<br> -- J1 또는 J4가 아닌 사람들 조회
+
+## FUNCTION(함수)
+- 문자열의 길이를 계산하는 함수
+- LENGTH / CHAR_LENGTH
+- LENGTH : BYTE길이 계산 (영어 1, 한글 3)
+- CHAR_LENGTH : 글자 수
+
+### INSTR : 주어진 값에서 원하는 문자가 몇번째인지 찾아 반환하는 함수
+- SELECT INSTR('ABCD','A'), INSTR("ABCD",'C'), INSTR('ABCD','X'), INSTR('ABCD','BC');
+
+### SUBSTR : 주어진 문자열에서 특정 부분만 꺼내오는 함수
+- SELECT 'HELLO WORLD',  
+		SUBSTR('HELLO WORLD',1,5),&nbsp;&nbsp;&nbsp;-- 1~5 문자들 가져온다  
+		SUBSTR('HELLO WORLD',7);&nbsp;&nbsp;&nbsp;-- 7번째 문자부터 가져온다
+
+### LPAD / RPAD
+> 빈칸을 지정한 문자로 채우는 함수
+- SELECT __LPAD__(EMAIL, 20, '*') 	--> 이메일을 가져오는데 20칸 짜리 공간을 만들고 비는 공간은 * 채운다는 소리  
+FROM EMPLOYEE;  
+- SELECT __RPAD__(EMAIL, 20, '*') 	--> LPAD는 왼쪽 공간에 채워넣고, RPAD는 오른쪽 공간에 채워넣은다.   
+FROM EMPLOYEE;
+
+### LTRIM / RTRIM : 공백 제거 
+- SELECT LTRIM(' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HELLO');	--> 문자열 왼쪽 공백 제거
+- SELECT RTRIM('HELLO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'); --> 문자열 오른쪽 공백 제거
+
+### TRIM : 양끝을 기준으로 특정 문자를 지워주는 함수
+- SELECT TRIM('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2교시&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+- SELECT TRIM('0' FROM '000123000');&nbsp;&nbsp;&nbsp;&nbsp;--> 앞,뒤 공백뿐만 아니라 특정 문자도 지워준다
+- SELECT TRIM('0' FROM '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;000123000');	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--> 0을 만나기 전에 공백을 만나버려서 바로 끝나버린다
+
+### CONCAT : 여러 문자열을 하나로 합치는 함수
+- SELECT CONCAT('마이에스큐엘', ' 너무너무너무 재밌어요 :)');
+
+### REPLACE
+- SELECT REPLACE('HELLO WORLD', 'HELLO', 'BYE');&nbsp;&nbsp;&nbsp;&nbsp;--> HELLO를 찾아서 BYE로 바꿔준다
+- SELECT REPLACE('HELLO WORLD', 'ELLO', 'BYE');	&nbsp;&nbsp;&nbsp;&nbsp;--> HBYE로 바뀐다
