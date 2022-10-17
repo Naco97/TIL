@@ -99,3 +99,40 @@ FROM EMPLOYEE;
 ### REPLACE
 - SELECT REPLACE('HELLO WORLD', 'HELLO', 'BYE');&nbsp;&nbsp;&nbsp;&nbsp;--> HELLO를 찾아서 BYE로 바꿔준다
 - SELECT REPLACE('HELLO WORLD', 'ELLO', 'BYE');	&nbsp;&nbsp;&nbsp;&nbsp;--> HBYE로 바뀐다
+
+#### 단일행함수 : 각 행마다 함수 적용
+#### 다중행함수 : 조건에 만족하는 모든 행을 찾고 한번에 연산
+#### 그룹함수 : SUM, AVG, MAX, MIN, COUNT
+
+### SUM(컬럼)
+- SELECT SUM(SALARY) FROM EMPLOYEE;
+
+### AVG(' ')
+- SELECT AVG(SALARY) FROM EMPLOYEE;
+
+### MAX(), MIN()
+- SELECT MAX(SALARY), MIN(SALARY)  
+FROM EMPLOYEE;
+
+### COUNT() : 행의 갯수
+- SELECT COUNT(*), COUNT(DEPT_CODE), COUNT(DISTINCT DEPT_CODE)   
+FROM EMPLOYEE;
+
+### SYSDATE(), NOW() : 현재 컴퓨터의 날짜를 반환
+- SELECT SYSDATE(), NOW() ;
+> NOW()와 SYSDATE()의 차이는 쿼리가 길어질 경우, 출력 되는 시간이 고정되느냐 변하느냐에 따른 차이가 있다.  
+NOW 는 쿼리가 처음 시작되는 시간이 고정되지만 SYSDATE 는 연산할 때 마다 시간이 변합니다.
+
+### 두 날짜 사이의 차
+> DATEDIFF : 단순 일 차이  
+> TIMESTAMPDIFF : 연, 분기, 월, 주, 일, 시, 분, 초 지정하여 차이
+- SELECT HIRE_DATE 입사일, DATEDIFF(NOW(), HIRE_DATE)+1  
+FROM EMPLOYEE;
+
+- SELECT EMP_NAME, HIRE_DATE, TIMESTAMPDIFF(YEAR, HIRE_DATE, NOW())  
+FROM EMPLOYEE;
+
+### EXTRACT : (YEAR | MONTH | DAY FROM 날짜데이터) : 지정한 날로부터 날짜 값을 추출
+- SELECT HIRE_DATE, EXTRACT(YEAR FROM HIRE_DATE),
+	   EXTRACT(MONTH FROM HIRE_DATE)  
+FROM EMPLOYEE;
