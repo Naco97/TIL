@@ -265,3 +265,43 @@ WHERE DEPT_CODE = DEPT_ID;		--> JOIN을 적지않고 FROM부분에 다 적어주
 - SELECT DEPT_CODE, DEPT_TITLE  
 FROM EMPLOYEE e , DEPARTMENT d   
 WHERE e.DEPT_CODE = d.DEPT_ID;		--> EMPLOYEE를 다 안적어주고 EMPLOYEE의 별명인 e를 적어서도 사용가능  
+
+## OUTER JOIN
+### LEFT JOIN
+- SELECT *  
+FROM EMPLOYEE e   
+-- LEFT OUTER JOIN DEPARTMENT d ON(DEPT_CODE = DEPT_ID);  
+LEFT JOIN DEPARTMENT d ON(DEPT_CODE = DEPT_ID);		-- OUTER 빼고 적어도 된다.  
+--  LEFT OUTER JOIN : 첫번째 테이블 기준으로 두번째 테이블을 JOIN, 조건에 만족하지 않는 경우 첫번째 테이블의 값 유지
+
+### RIGHT JOIN
+- SELECT *  
+FROM EMPLOYEE e   
+RIGHT JOIN DEPARTMENT d ON(DEPT_CODE=DEPT_ID);  
+--  RIGHT OUTER JOIN : LEFT의 반대, 두번째 테이블 기준  
+-- LEFT에서는 EMPLOYEE에 D3,D4가 없어서 DAPARTMENT에 D3,D4가 삭제되었지만 RIGHT에서는 삭제 안되고 남아있다.  
+-- 그리고 LEFT에서 EMPLOYEE NULL부분 살아있었지만 RIGHT에서는 삭제되었다.
+
+#### ON() 안에는 계산식, 함수식, AND, OR 조건식 등의 표현식을 넣을 수 있다.
+
+## SELF JOIN
+> 자기 자신을 조인
+
+- 직원의 정보와 직원을 관리하는 매니저의 정보를 조회  
+SELECT EMP_ID, EMP_NAME, MANAGER_ID FROM EMPLOYEE e ;
+
+## 다중 JOIN
+> 여러 개의 테이블을 JOIN하는 것  
+- 표준 SQL  
+SELECT *  
+FROM EMPLOYEE  
+JOIN DEPARTMENT ON(DEPT_CODE = DEPT_ID)  
+JOIN LOCATION ON(LOCATION_ID = LOCAL_CODE)  
+JOIN JOB USING(JOB_CODE);  
+
+- MYSQL 전용 문법  
+SELECT *  
+FROM EMPLOYEE, DEPARTMENT, LOCATION  
+WHERE DEPT_CODE = DEPT_ID AND LOCATION_ID = LOCAL_CODE;  
+-- 너무 많아지면 헷갈린다 그냥 표준 문법으로 적는게 더 직관적이고 덜 헷갈린다
+
