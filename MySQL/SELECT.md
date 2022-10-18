@@ -305,3 +305,42 @@ FROM EMPLOYEE, DEPARTMENT, LOCATION
 WHERE DEPT_CODE = DEPT_ID AND LOCATION_ID = LOCAL_CODE;  
 -- 너무 많아지면 헷갈린다 그냥 표준 문법으로 적는게 더 직관적이고 덜 헷갈린다
 
+## SUB QUERY
+> 메인 쿼리 안에 조건이나 검색을 위한 또 하나의 쿼리를 추가하는 기법  
+ 쿼리안에 쿼리 --> 셀렉트문 안에 셀렉트문  
+
+### 단일행 서브쿼리
+> 서브쿼리의 실행 결과 값이 1개 나오는 서브쿼리  
+- 최소 급여를 받는 사원 정보 조회
+- SELECT *  
+FROM EMPLOYEE  
+WHERE SALARY = (SELECT MIN(SALARY) FROM EMPLOYEE);  
+
+### 다중행 서브쿼리
+> 결과 값이 여러 줄 나오는 서브쿼리
+- 각 직급별 최소 급여를 받는 사원 정보
+- SELECT *  
+FROM EMPLOYEE  
+WHERE SALARY IN(SELECT MIN(SALARY) FROM EMPLOYEE GROUP BY JOB_CODE);   
+
+### 다중행 다중열 서브쿼리
+> 여러 로우, 여러 컬럼의 결과를 가져오는 서브쿼리
+- SELECT *   
+FROM EMPLOYEE  
+WHERE (JOB_CODE, SALARY) IN(SELECT JOB_CODE, MIN(SALARY)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM EMPLOYEE  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GROUP BY JOB_CODE);
+
+### FROM 위치에 사용하는 서브쿼리
+> Inline View(인라인 뷰)  
+ 테이블을 테이블명으로 직접 조회하는 대신  
+ 서브쿼리의 결과셋(RESULTSET)을 활용하여 데이터 조회  
+
+ - SELECT *  
+FROM (  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SELECT EMP_ID, EMP_NAME, DEPT_TITLE, JOB_NAME  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM EMPLOYEE  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOIN DEPARTMENT ON(DEPT_CODE = DEPT_ID)  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOIN JOB USING(JOB_CODE)  
+) T;	-- 서브쿼리의 별명(T) 꼭 설정해 줘야한다.
+
