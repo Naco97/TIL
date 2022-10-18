@@ -309,21 +309,21 @@ WHERE DEPT_CODE = DEPT_ID AND LOCATION_ID = LOCAL_CODE;
 > 메인 쿼리 안에 조건이나 검색을 위한 또 하나의 쿼리를 추가하는 기법  
  쿼리안에 쿼리 --> 셀렉트문 안에 셀렉트문  
 
-### 단일행 서브쿼리
+#### 단일행 서브쿼리
 > 서브쿼리의 실행 결과 값이 1개 나오는 서브쿼리  
 - 최소 급여를 받는 사원 정보 조회
 - SELECT *  
 FROM EMPLOYEE  
 WHERE SALARY = (SELECT MIN(SALARY) FROM EMPLOYEE);  
 
-### 다중행 서브쿼리
+#### 다중행 서브쿼리
 > 결과 값이 여러 줄 나오는 서브쿼리
 - 각 직급별 최소 급여를 받는 사원 정보
 - SELECT *  
 FROM EMPLOYEE  
 WHERE SALARY IN(SELECT MIN(SALARY) FROM EMPLOYEE GROUP BY JOB_CODE);   
 
-### 다중행 다중열 서브쿼리
+#### 다중행 다중열 서브쿼리
 > 여러 로우, 여러 컬럼의 결과를 가져오는 서브쿼리
 - SELECT *   
 FROM EMPLOYEE  
@@ -331,7 +331,7 @@ WHERE (JOB_CODE, SALARY) IN(SELECT JOB_CODE, MIN(SALARY)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM EMPLOYEE  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GROUP BY JOB_CODE);
 
-### FROM 위치에 사용하는 서브쿼리
+#### FROM 위치에 사용하는 서브쿼리
 > Inline View(인라인 뷰)  
  테이블을 테이블명으로 직접 조회하는 대신  
  서브쿼리의 결과셋(RESULTSET)을 활용하여 데이터 조회  
@@ -344,3 +344,96 @@ FROM (
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOIN JOB USING(JOB_CODE)  
 ) T;	-- 서브쿼리의 별명(T) 꼭 설정해 줘야한다.
 
+#### 서브쿼리의 사용 위치
+- SELECT, FROM, WHERE, GROUP BY, HAVING ORDER BY
+- INSERT, UPDATE, DELETE (DML)
+- CREATE TABLE, CREATE VIEW (DDL)
+
+### RANK() 
+> 동일한 순번이 있을 경우 이후의 순번은 건너뛰고 메기는 함수    
+1  
+2  
+2  
+4  
+- SELECT EMP_NAME, SALARY, RANK() OVER(ORDER BY SALARY DESC) 순위  
+FROM EMPLOYEE;  
+-- 19, 19, 21
+
+### DENSE_RANK() 
+> 동일한 순번이 있을 경우 이후 순번에 영향을 미치지 않는다  
+1  
+2  
+2  
+3  
+- SELECT EMP_NAME, SALARY, DENSE_RANK() OVER(ORDER BY SALARY DESC) 순위  
+FROM EMPLOYEE;  
+-- 19, 19, 20
+
+### ROW_NUMBER 
+> 동일 순번은 무시.
+- SELECT EMP_NAME, SALARY, ROW_NUMBER() OVER(ORDER BY SALARY DESC) 순위  
+FROM EMPLOYEE;
+
+## DDL
+> CREATE : 데이터 베이스의 객체를 생성하는 DDL    
+[사용형식] CREATE 객체종류 객체명 (관련 내용들...)
+
+### CREATE TABLE
+> 데이터를 저장하기 위한 틀(객체)  
+데이터를 2차원의 표 형태로 담을 수 있는 객체
+- CREATE TABLE MEMBER(  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MEMBER_NO INT,  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MEMBER_ID VARCHAR(20),  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MEMBER_PW VARCHAR(20),  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MEMBER_NAME VARCHAR(15)  
+);
+
+## 제약조건(CONSTRANITS)
+> 테이블 생성할 때 컬럼에 값을 기록하는 것에 대한 제약사항을 설정.
+
+- NOT NULL : 해당 컬럼에 NULL값 허용 하지 않는다.
+- UNIQUE : 해당 컬럼에 중복값 허용하지 않는다.
+- CHECK : 해당 컬럼에 지정한 입력사항 외에는 받지 못하게 막는다.
+- PRIMARY KEY : NOT NULL + UNIQUE. 테이블 내에서 해당 행을 인식할 수 있는 고유값  EX)주민번호
+- FOREIGN KEY : 다른 테이블에서 저장된 값을 연결 지어서 참조로 가져오는 데이터에 지정하는 제약조건
+
+###  NOT NULL 제약조건 추가하여 TABLE 생성
+- CREATE TABLE USER_NOT_NULL(  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_NO INT NOT NULL,   
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_ID VARCHAR(20) NOT NULL,  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_PW VARCHAR(20) NOT NULL  
+);  
+
+### UNIQUE
+> 중복을 허용하지 않는 제약조건  
+컬럼에 입력/수정 시 중복확인하여 중복값 있을 경우에는   
+값 추가/수정 하지 못하게 막는 제약조건  
+- CREATE TABLE USER_UNIQUE(  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_NO INT,  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_ID VARCHAR(20) UNIQUE,		-- 컬럼 레벨  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_PW VARCHAR(30)  
+);  
+- CREATE TABLE USER_UNIQUE2(  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_NO INT,  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_ID VARCHAR(20),  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_PW VARCHAR(20),  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UNIQUE(USER_ID)				-- 테이블 레벨  
+);
+
+### UNIQUE 제약 조건을 여러 컬럼에 적용
+> 1 USER01  
+1 USER02  
+2 USER01  
+2 USER02  
+- CREATE TABLE USER_UNIQUE3(  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_NO INT,  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_ID VARCHAR(20),  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_PW VARCHAR(30),  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UNIQUE(USER_NO, USER_ID)			-- 둘 다 고려해야된다.  
+);  
+
+- INSERT INTO USER_UNIQUE3 VALUES(1, 'USER01', 'PASS01');		-- NO,ID값이 둘 중 하나만 같으면 두 가지가 동시에 같은게 아니기 때문에 정상적으로 추가된다  
+- INSERT INTO USER_UNIQUE3 VALUES(1, 'USER02', 'PASS01');
+- INSERT INTO USER_UNIQUE3 VALUES(2, 'USER01', 'PASS01');		-- USER01은 같지만 NO값이 다르기 때문에 정상적으로 추가된다  
+- INSERT INTO USER_UNIQUE3 VALUES(2, 'USER02', 'PASS01');		-- NO값이 같지만 ID값이 다르기 때문에 정상적으로 추가된다.  
+- SELECT * FROM USER_UNIQUE3;
