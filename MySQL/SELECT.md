@@ -437,3 +437,58 @@ FROM EMPLOYEE;
 - INSERT INTO USER_UNIQUE3 VALUES(2, 'USER01', 'PASS01');		-- USER01은 같지만 NO값이 다르기 때문에 정상적으로 추가된다  
 - INSERT INTO USER_UNIQUE3 VALUES(2, 'USER02', 'PASS01');		-- NO값이 같지만 ID값이 다르기 때문에 정상적으로 추가된다.  
 - SELECT * FROM USER_UNIQUE3;
+
+### CHECK
+> 컬럼에 값을 기록할 때 지정한 값 이외에는 값이 기록되지 않도록 범위를 제한하는 조건
+
+- CREATE TABLE USER_CHECK(   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_NO INT,   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_ID VARCHAR(20),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER_PW VARCHAR(30),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDER VARCHAR(10) CHECK(GENDER IN('F', 'M'))  
+);
+
+- INSERT INTO USER_CHECK VALUES(1, 'USER01', 'PASS01', 'F');
+
+- SQL Error [3819] [HY000]: Check constraint 'USER_CHECK_chk_1' is violated.  
+INSERT INTO USER_CHECK VALUES(1, 'USER01', 'PASS01', 'FEMALE');
+
+- INSERT INTO USER_CHECK VALUES(1, 'USER01', 'PASS01', 'm');		-- 정상적으로 추가가능
+
+### CHECK 제약조건 부등호 활용
+- CREATE TABLE TEST_CHECK(  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TEST_DATA INT,  
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONSTRAINT CK_TESTCHECK_DATA CHECK(TEST_DATA > 0)  
+);
+
+INSERT INTO TEST_CHECK VALUES(10);
+
+-- SQL Error [3819] [HY000]: Check constraint 'CK_TESTCHECK_DATA' is violated.
+INSERT INTO TEST_CHECK VALUES(-10);
+
+### CHECK 제약조건 활용 예시
+- CREATE TABLE TEST_CHECK2(   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_NAME VARCHAR(15),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_PRICE INT,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_DATE DATE,  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_QUAL VARCHAR(1),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHECK(C_PRICE BETWEEN 1 AND 999999),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHECK(C_DATE >= '2010/10/18'),  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHECK(C_QUAL >= 'A' AND C_QUAL <= 'D')  
+ );
+
+ ### PRIMARY KEY 제약조건
+- 기본키 제약조건  
+- 테이블 내의 한 행에서 그 행을 식별하기 위한 고유값을 가지는 컬럼
+- 해당 컬럼에 NOT NULL, UNIQUE 제약조건을 함께 걸어준다  
+- 테이블 전체에 대한 각 데이터의 식별자 역할을 수행하는 제약조건  
+- 기본키 제약조건은 테이블 반드시 한개만 존재해야 한다  
+
+### FOREIGN KEY
+- 외래키, 외부키, 참조키
+- 다른 테이블의 컬럼값을 참조하여 참조하는 테이블의 값만을 허용한다.
+- 한 테이블을 다른 테이블과 연결해주는 역할을 한다.
+- FOREIGN KEY 제약조건을 통해 다른 테이블과의 관계(RELATIONSHIP)가 형성된다.
+- 참조하고자 하는 컬럼은 반드시 PRIMARY KEY 이거나 UNIQUE 제약조건이 걸려 있어야 한다.
+
+
